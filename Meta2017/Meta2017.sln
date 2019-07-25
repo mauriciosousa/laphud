@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta2017", "Meta2017.csproj", "{4E8791CF-0FC0-7F3E-C9AF-8507CB60EB9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta2017.Editor", "Meta2017.Editor.csproj", "{EAA3C50D-8AE8-B3CB-9ED0-9F6CEB77E51F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E8791CF-0FC0-7F3E-C9AF-8507CB60EB9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E8791CF-0FC0-7F3E-C9AF-8507CB60EB9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E8791CF-0FC0-7F3E-C9AF-8507CB60EB9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E8791CF-0FC0-7F3E-C9AF-8507CB60EB9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAA3C50D-8AE8-B3CB-9ED0-9F6CEB77E51F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAA3C50D-8AE8-B3CB-9ED0-9F6CEB77E51F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAA3C50D-8AE8-B3CB-9ED0-9F6CEB77E51F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAA3C50D-8AE8-B3CB-9ED0-9F6CEB77E51F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
