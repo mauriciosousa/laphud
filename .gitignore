@@ -40,3 +40,6 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+Meta2017/Library/*
+Meta2017/Temp/*
+Meta2017/bin/*

@@ -87,6 +87,8 @@ public class WebCamQueue : MonoBehaviour {
     public VideoSource Source;
     public Renderer Target;
 
+    public bool mirror = false;
+
     #endregion
 
     #region Private Variables
@@ -241,7 +243,7 @@ public class WebCamQueue : MonoBehaviour {
         if (sourceIsReady && Source.height > 0)
         {
             float ratio = (float)Source.width / (float)Source.height;
-            Target.transform.localScale = new Vector3(-ratio, transform.localScale.y, transform.localScale.z);
+            Target.transform.localScale = new Vector3( mirror ? -ratio : ratio, transform.localScale.y, transform.localScale.z);
         }
     }
 
