@@ -6,6 +6,9 @@ using UnityEngine;
 
 public enum LAG
 {
+    LAG_5 = 5,
+    LAG_10 = 10,
+    LAG_15 = 15,
     LAG_20 = 20,
     LAG_30 = 30,
     LAG_60 = 60,
@@ -36,6 +39,7 @@ public enum TaskType
 public class EvaluationProceadure : MonoBehaviour {
 
     public HUDMessage displayMessage;
+    public WebCamQueue _webcamQueue;
 
     public float SessionTimeMinutes = 10;
     private float _sessionTimeMilliseconds = 0;
@@ -135,6 +139,10 @@ public class EvaluationProceadure : MonoBehaviour {
                 Debug.Log("STAPH");
                 sessionRunning = false;
             }
+
+
+            _webcamQueue.Delay = (uint) lag;
+            
         }
     }
 
