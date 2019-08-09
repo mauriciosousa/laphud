@@ -50,11 +50,7 @@ public class EvaluationProceadure : MonoBehaviour {
     private string _resultsFolder = "/Results";
 
 
-    [Space(10)]
-    public string startMessageText = "";
-    public Color startMessageColor = Color.green;
-
-
+    public bool applyLag = true;
 
 
 	void Start () {
@@ -139,11 +135,9 @@ public class EvaluationProceadure : MonoBehaviour {
                 Debug.Log("STAPH");
                 sessionRunning = false;
             }
-
-
-            _webcamQueue.Delay = (uint) lag;
-            
         }
+
+        if (applyLag) _webcamQueue.Delay = (uint)lag;
     }
 
     void OnGUI()
