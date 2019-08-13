@@ -1,4 +1,4 @@
-sessionTimeMinutes=10
+sessionTimeMinutes=1
 
 condition=BL
 //condition=HUD

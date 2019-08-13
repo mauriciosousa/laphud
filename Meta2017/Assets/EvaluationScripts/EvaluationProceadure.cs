@@ -41,7 +41,7 @@ public class EvaluationProceadure : MonoBehaviour {
     public HUDMessage displayMessage;
     public WebCamQueue _webcamQueue;
 
-    public float SessionTimeMinutes = 10;
+    public int SessionTimeMinutes = 10;
     private float _sessionTimeMilliseconds = 0;
     public LAG lag = LAG.NONE;
     public ConditionType condition = ConditionType.HUD;
@@ -49,11 +49,15 @@ public class EvaluationProceadure : MonoBehaviour {
     public string configFile = "config.txt";
     private string _resultsFolder = "/Results";
 
+    public OSCTunaReceiver tunas;
 
-    public bool applyLag = true;
+    public GUIStyle taskInfoStyle;
 
+    public double displayStartTaskMessageTime = 1500;
+    public double displayEndTaskMessageTime = 1000;
+    public double displayEndEvaluationMessageTime = 10000;
 
-	void Start () {
+    void Start () {
         Application.runInBackground = true;
 
         _resultsFolder = Application.dataPath + _resultsFolder;
@@ -88,7 +92,7 @@ public class EvaluationProceadure : MonoBehaviour {
     {
         string config = Application.dataPath + "/" + configFile;
 
-        SessionTimeMinutes = float.Parse(ConfigProperties.load(config, "sessionTimeMinutes"));
+        SessionTimeMinutes = int.Parse(ConfigProperties.load(config, "sessionTimeMinutes"));
         condition = (ConditionType)Enum.Parse(enumType: typeof(ConditionType), value: ConfigProperties.load(config, "condition"));
         taskType = (TaskType)Enum.Parse(enumType: typeof(TaskType), value: ConfigProperties.load(config, "task"));
     }
@@ -100,25 +104,47 @@ public class EvaluationProceadure : MonoBehaviour {
     public string ellapsedDisplay = "";
 
     public bool sessionRunning = false;
+    public bool duringTask = false;
+
+    private LogData _log;
+    private bool _canLogTunas = false;
+    private LogTunas _logTunas;
+    private DateTime taskStartTime;
 
     private void _startTask()
     {
+        if (duringTask) return;
+
         if (taskCounter == 0)
         {
             sessionStartTime = DateTime.Now;
             sessionRunning = true;
+            _log = new LogData(Application.dataPath + "/Results/Results_" + condition + "_" + taskType + ".txt");
         }
 
         if (sessionRunning)
         {
             taskCounter += 1;
+            duringTask = true;
+            taskStartTime = DateTime.Now;
+            displayMessage.add("Task started...", Color.green, displayStartTaskMessageTime);
+
+            _canLogTunas = true;
+            _logTunas = new LogTunas(Application.dataPath + "/Results/Tunas_" + condition + "_" + taskType + "_" + "task" + taskCounter + ".txt");
+            _logTunas.header(tunas.tunaData.Keys);
         }
     }
 
     private void _endTask()
     {
+        if (!duringTask) return;
+        duringTask = false;
+        _log.Add(taskCounter, taskStartTime, (DateTime.Now - taskStartTime));
 
+        displayMessage.add("Task ended...", Color.yellow, displayEndTaskMessageTime);
 
+        _canLogTunas = false;
+        _logTunas.flush();
     }
 
     void Update()
@@ -128,23 +154,129 @@ public class EvaluationProceadure : MonoBehaviour {
         if (sessionRunning)
         {
             ellapsed = DateTime.Now - sessionStartTime;
-            ellapsedDisplay = ellapsed.ToString("c");
+            ellapsedDisplay = (new TimeSpan(0, SessionTimeMinutes, 0) - ellapsed).ToString("c").Split('.')[0];
+
+
+            if (_canLogTunas)
+            {
+                _logTunas.add(tunas.tunaData.Values);
+            }
+
 
             if (ellapsed.TotalMilliseconds >= _sessionTimeMilliseconds)
             {
                 Debug.Log("STAPH");
+                displayMessage.add("Mission Accomplished", Color.red, displayEndEvaluationMessageTime);
                 sessionRunning = false;
+                _log.flush();
+                _logTunas.flush();
             }
         }
 
-        if (applyLag) _webcamQueue.Delay = (uint)lag;
+        _webcamQueue.Delay = (uint)lag;
     }
 
     void OnGUI()
     {
         if (sessionRunning)
         {
-            GUI.Label(new Rect(Screen.width - 120, 10, 120, 30), ellapsedDisplay);
+            int left = Screen.width / 2;
+            int top = 10;
+            int step = 35;
+
+            GUI.Label(new Rect(left,top, 500, step), ellapsedDisplay, taskInfoStyle);
+            if (duringTask)
+            {
+                top += step;
+                GUI.Label(new Rect(left, top, 500, step), "Task: " + taskCounter, taskInfoStyle);
+            }
         }
+    }
+}
+
+public class LogData
+{
+    private string _filename;
+    private List<string> _lines;
+    private string _sep = "$";
+
+    public LogData(string filename)
+    {
+        _filename = filename;
+        _lines = new List<string>();
+
+        string line = "TASK" + _sep + "START" + _sep + "TOTALTIME";
+        _lines.Add(line);
+    }
+
+    public void Add(int task, DateTime start, TimeSpan totaltime)
+    {
+        string line = "";
+        line += task + _sep;
+        line += start.ToString("yyyy/MM/dd-HH:mm:ss") + _sep;
+        line += totaltime.TotalMilliseconds + _sep;
+
+        _lines.Add(line);
+    }
+
+    public void flush()
+    {
+        File.WriteAllLines(_filename, _lines.ToArray());
+    }
+}
+
+public class LogTunas
+{
+    private string _filename;
+    private List<string> _lines;
+    private string _sep = "$";
+
+    public LogTunas(string filename)
+    {
+        _filename = filename;
+        _lines = new List<string>();
+    }
+
+
+
+    public void flush()
+    {
+        File.WriteAllLines(_filename, _lines.ToArray());
+    }
+
+    internal void add(Dictionary<string, TunaInfo>.ValueCollection values)
+    {
+        string line = "";
+        foreach (TunaInfo i in values)
+        {
+            line += i.accel.x + _sep;
+            line += i.accel.y + _sep;
+            line += i.accel.z + _sep;
+            line += i.gyro.x + _sep;
+            line += i.gyro.y + _sep;
+            line += i.gyro.z + _sep;
+            line += i.mag.x + _sep;
+            line += i.mag.y + _sep;
+            line += i.mag.z + _sep;
+        }
+        _lines.Add(line);
+    }
+
+    internal void header(Dictionary<string, TunaInfo>.KeyCollection keys)
+    {
+        string line = "";
+        foreach (string s in keys)
+        {
+            line += s + ".accel.x" + _sep;
+            line += s + ".accel.y" + _sep;
+            line += s + ".accel.z" + _sep;
+            line += s + ".gyro.x" + _sep;
+            line += s + ".gyro.y" + _sep;
+            line += s + ".gyro.z" + _sep;
+            line += s + ".mag.x" + _sep;
+            line += s + ".mag.y" + _sep;
+            line += s + ".mag.z" + _sep;
+        }
+        _lines.Add(line);
     }
 }

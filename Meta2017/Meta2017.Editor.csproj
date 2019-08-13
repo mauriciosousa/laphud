@@ -278,6 +278,15 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>Assets/ExtraScreen/Windows.Forms/System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management">
+      <HintPath>Assets/ExtraScreen/Windows.Forms/System.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>Assets/ExtraScreen/Windows.Forms/System.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="NSubstitute">
       <HintPath>Assets/MetaSDK/Plugins/Editor/Managed/NSubstitute.dll</HintPath>
     </Reference>
@@ -349,15 +358,6 @@
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/TeachinglabA/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing">
-      <HintPath>Assets/ExtraScreen/Windows.Forms/System.Drawing.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Management">
-      <HintPath>Assets/ExtraScreen/Windows.Forms/System.Management.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <HintPath>Assets/ExtraScreen/Windows.Forms/System.Windows.Forms.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -470,7 +470,16 @@
     <None Include="Assets\MysqlConnector\MySql.Data.EntityFramework.xml" />
     <None Include="Assets\MysqlConnector\MySql.Data.xml" />
     <None Include="Assets\MysqlConnector\MySql.Web.xml" />
-    <None Include="Assets\Results\Results_BL_Needle_Thread_20190809142853.txt" />
+    <None Include="Assets\Results\Results_BL_Needle_Thread.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task1.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task2.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task3.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task4.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task5.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task6.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task7.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task8.txt" />
+    <None Include="Assets\Results\Tunas_BL_Needle_Thread_task9.txt" />
     <None Include="Assets\WebcamDisplay.shader" />
     <None Include="Assets\config.txt" />
     <None Include="Assets\extOSC\versions.txt" />
