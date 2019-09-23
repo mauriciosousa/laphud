@@ -34,6 +34,10 @@ public class OSCTunaReceiver : MonoBehaviour {
     public GUIStyle s;
     public bool displayTunas;
 
+    public Transform tuna11;
+
+    public bool recordingGUI;
+
     void Start()
     {
         Application.runInBackground = true;
@@ -43,28 +47,88 @@ public class OSCTunaReceiver : MonoBehaviour {
         for (int i = 0; i < tunaIds.Count; i++)
         {
             tunaAddress = "/tuna" + tunaIds[i];
-            tunaData[tunaAddress] = new TunaInfo();
+            tunaData.Add(tunaAddress, new TunaInfo());
+            Debug.Log("add: " + tunaAddress);
             Receiver.Bind(tunaAddress, ReceivedMessage);
 
             if (i == 0) _firstTuna = tunaAddress;
         }
     }
 
+    #region Smoothing //Pedro Belchior - para estabilizar os valores dos imus
+
+    [Range(1, 200)]
+    public int maxQueueSize = 100; private Queue<Vector3> smoothingGyro = new Queue<Vector3>();
+    private Vector3 gyroSum = Vector3.zero;
+
+    private void AddToSmoothingQueue(Vector3 tmp, int maxQueueSize) {
+
+        smoothingGyro.Enqueue(tmp);
+        gyroSum += tmp;
+
+        while (smoothingGyro.Count > maxQueueSize) {
+            gyroSum -= smoothingGyro.Dequeue();
+        }
+    }
+
+    private Vector3 GetSmoothedValue() {
+        int div = smoothingGyro.Count;
+        if (div < 1) div = 1;
+        return gyroSum / div;
+    }
+
+    #endregion
+
+    private void Update() {
+        if (recording && tunaData.ContainsKey("/tuna17")) {
+            TunaInfo t = tunaData["/tuna17"];
+            _lines.Add("" + DateTime.Now.ToString("yyyy/MM/dd-HH:mm:ss:fff") + sep + t.accel.x + sep + t.accel.y + sep + t.accel.z + sep + t.gyro.x + sep + t.gyro.y + sep + t.gyro.z + sep + t.mag.x + sep + t.mag.y + sep + t.mag.z);
+
+        }
+    }
+
+    void LateUpdate() {
+
+        Vector3 tmp = tunaData["/tuna17"].gyro;
+        AddToSmoothingQueue(tmp, maxQueueSize);
+
+        Quaternion q = Quaternion.Euler(GetSmoothedValue());
+        //tuna11.rotation = q;
+
+        tuna11.LookAt(tuna11.position + GetSmoothedValue());
+
+        Debug.DrawRay(tuna11.position, GetSmoothedValue());
+        Debug.DrawRay(tuna11.position, transform.forward, Color.blue);
+        Debug.DrawRay(tuna11.position, transform.right, Color.red);
+        Debug.DrawRay(tuna11.position, transform.up, Color.green);
+
+    }
+
     private void ReceivedMessage (OSCMessage message) {
+
+        Debug.Log(message.Address);
 
         if (tunaData.ContainsKey(message.Address))
         {
-            tunaData[message.Address].accel.x = message.Values[0].FloatValue;
-            tunaData[message.Address].accel.y = message.Values[1].FloatValue;
-            tunaData[message.Address].accel.z = message.Values[2].FloatValue;
 
-            tunaData[message.Address].gyro.x = message.Values[3].FloatValue;
-            tunaData[message.Address].gyro.y = message.Values[4].FloatValue;
-            tunaData[message.Address].gyro.z = message.Values[5].FloatValue;
 
-            tunaData[message.Address].mag.x = message.Values[6].FloatValue;
-            tunaData[message.Address].mag.y = message.Values[7].FloatValue;
-            tunaData[message.Address].mag.z = message.Values[8].FloatValue;
+            Debug.Log("1: "+ tunaData[message.Address].accel.x + "   " + message.Values[0].Value);
+
+
+            tunaData[message.Address].accel.x =    (float)message.Values[0].DoubleValue;
+            tunaData[message.Address].accel.y =    (float) message.Values[1].DoubleValue;
+            tunaData[message.Address].accel.z =    (float) message.Values[2].DoubleValue;
+                                                                             
+            tunaData[message.Address].gyro.x =     (float) message.Values[3].DoubleValue;
+            tunaData[message.Address].gyro.y =     (float) message.Values[4].DoubleValue;
+            tunaData[message.Address].gyro.z =     (float) message.Values[5].DoubleValue;
+                                                                             
+            tunaData[message.Address].mag.x =      (float) message.Values[6].DoubleValue;
+            tunaData[message.Address].mag.y =      (float) message.Values[7].DoubleValue;
+            tunaData[message.Address].mag.z =      (float)message.Values[8].DoubleValue;
+
+            Debug.Log("2: " + tunaData[message.Address].accel.x);
+
         }
 
         if (message.Address == _firstTuna)
@@ -77,6 +141,35 @@ public class OSCTunaReceiver : MonoBehaviour {
             }
         }
     }
+
+    private bool recording = false;
+    private string filename = "";
+    private List<string> _lines;
+    private string sep = "$";
+    private void startRecording() {
+
+        if (tunaData.Count > 0 && !recording) {
+
+            filename = Application.dataPath + "Recording" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".txt";
+                recording = true;
+                _lines = new List<string>();
+        }
+    }
+
+    private void endRecording() {
+
+        if (!recording) return;
+
+        recording = false;
+
+        using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter(filename)) {
+            foreach (string line in _lines) {
+                    file.WriteLine(line);
+            }
+        }
+    }
+
 
     private void OnGUI()
     {
@@ -95,5 +188,19 @@ public class OSCTunaReceiver : MonoBehaviour {
                 GUI.Label(new Rect(left + 10, top, 500, step), "mag: " + t.Value.mag.ToString(), s); top += step;
             }
         }
+
+        if (recordingGUI) {
+            if (!recording) {
+                if (GUI.Button(new Rect(10, 10, 100, 100), "Start Recording")) {
+                    startRecording();
+                }
+            }
+            else {
+                if (GUI.Button(new Rect(10, 10, 100, 100), "End Recording")) {
+                    endRecording();
+                }
+            }
+            
+         }
     }
 }
