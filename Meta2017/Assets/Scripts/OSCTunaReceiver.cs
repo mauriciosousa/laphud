@@ -6,12 +6,16 @@ using System;
 
 public class TunaInfo
 {
+    private readonly string _id;
+    public string ID => _id;
+
     public Vector3 accel;
     public Vector3 gyro;
     public Vector3 mag;
 
-    public TunaInfo()
+    public TunaInfo(string id)
     {
+        _id = id;
         accel = Vector3.zero;
         gyro = Vector3.zero;
         mag = Vector3.zero;
@@ -47,7 +51,7 @@ public class OSCTunaReceiver : MonoBehaviour {
         for (int i = 0; i < tunaIds.Count; i++)
         {
             tunaAddress = "/tuna" + tunaIds[i];
-            tunaData.Add(tunaAddress, new TunaInfo());
+            tunaData.Add(tunaAddress, new TunaInfo(tunaIds[i]));
             Debug.Log("add: " + tunaAddress);
             Receiver.Bind(tunaAddress, ReceivedMessage);
 
@@ -106,13 +110,13 @@ public class OSCTunaReceiver : MonoBehaviour {
 
     private void ReceivedMessage (OSCMessage message) {
 
-        Debug.Log(message.Address);
+        //Debug.Log(message.Address);
 
         if (tunaData.ContainsKey(message.Address))
         {
 
 
-            Debug.Log("1: "+ tunaData[message.Address].accel.x + "   " + message.Values[0].Value);
+            //Debug.Log("1: "+ tunaData[message.Address].accel.x + "   " + message.Values[0].Value);
 
 
             tunaData[message.Address].accel.x =    (float)message.Values[0].DoubleValue;
@@ -127,7 +131,7 @@ public class OSCTunaReceiver : MonoBehaviour {
             tunaData[message.Address].mag.y =      (float) message.Values[7].DoubleValue;
             tunaData[message.Address].mag.z =      (float)message.Values[8].DoubleValue;
 
-            Debug.Log("2: " + tunaData[message.Address].accel.x);
+            //Debug.Log("2: " + tunaData[message.Address].accel.x);
 
         }
 
@@ -150,7 +154,7 @@ public class OSCTunaReceiver : MonoBehaviour {
 
         if (tunaData.Count > 0 && !recording) {
 
-            filename = Application.dataPath + "Recording" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".txt";
+            filename = Application.dataPath + "/Recordings/Recording" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".txt";
                 recording = true;
                 _lines = new List<string>();
         }
@@ -167,6 +171,8 @@ public class OSCTunaReceiver : MonoBehaviour {
             foreach (string line in _lines) {
                     file.WriteLine(line);
             }
+            Debug.Log("file recorded: " + filename);
+
         }
     }
 

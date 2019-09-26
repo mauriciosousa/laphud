@@ -57,6 +57,8 @@ public class EvaluationProceadure : MonoBehaviour {
     public double displayEndTaskMessageTime = 1000;
     public double displayEndEvaluationMessageTime = 10000;
 
+    private string _calibrationPoseFilename;
+
     void Start () {
         Application.runInBackground = true;
 
@@ -71,8 +73,11 @@ public class EvaluationProceadure : MonoBehaviour {
             print("Folder exists: " + _resultsFolder);
         }
 
+        _calibrationPoseFilename = _resultsFolder + "/CalibrationPose-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".txt";
+
         _loadConfig();
         _sessionTimeMilliseconds = SessionTimeMinutes * 60000; 
+        
     }
 
     private void _lookForKeyEvents()
@@ -190,6 +195,57 @@ public class EvaluationProceadure : MonoBehaviour {
                 top += step;
                 GUI.Label(new Rect(left, top, 500, step), "Task: " + taskCounter, taskInfoStyle);
             }
+        }
+
+        if (tunas.tunaIds.Count > 0) {
+            if (GUI.Button(new Rect(0, Screen.height - 20, 200, 20), "Store calibration pose")) {
+                _saveCalibrationPose();
+            }
+        }
+    }
+
+    private void _saveCalibrationPose() {
+        List<string> lines = new List<string>();
+
+        string line = "";
+        line += "ID$";
+
+        line += "accel.X$";
+        line += "accel.Y$";
+        line += "accel.Z$";
+
+        line += "gyro.X$";
+        line += "gyro.Y$";
+        line += "gyro.Z$";
+
+        line += "mag.X$";
+        line += "mag.Y$";
+        line += "mag.Z$";
+
+        lines.Add(line);
+
+        foreach (TunaInfo i in tunas.tunaData.Values) {
+            line = "";
+            line += i.ID + "$";
+            line += i.accel.x + "$";
+            line += i.accel.y + "$";
+            line += i.accel.z + "$";
+            line += i.gyro.x + "$";
+            line += i.gyro.y + "$";
+            line += i.gyro.z + "$";
+            line += i.mag.x + "$";
+            line += i.mag.y + "$";
+            line += i.mag.z + "$";
+            lines.Add(line);
+        }
+
+        using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter(_calibrationPoseFilename)) {
+            foreach (string l in lines) {
+                file.WriteLine(l);
+            }
+            Debug.Log("file recorded: " + _calibrationPoseFilename);
+
         }
     }
 }
