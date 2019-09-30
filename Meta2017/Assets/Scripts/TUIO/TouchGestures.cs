@@ -124,7 +124,7 @@ public class TouchGestures : MonoBehaviour {
 	{
 		if (gesture != GesturesType.NONE) {
 		
-			GUI.Label (new Rect (10, Screen.height - 40, 500, 30), "" + gesture, font);
+			GUI.Label (new Rect (10, Screen.height - 100, 500, 30), "" + gesture, font);
 		
 		}
 	}

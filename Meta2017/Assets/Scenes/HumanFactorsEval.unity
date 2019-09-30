@@ -469,7 +469,7 @@ MonoBehaviour:
     m_Normal:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 0.63529414, g: 0.63529414, b: 0.63529414, a: 1}
+      m_TextColor: {r: 0.17717347, g: 0.8308824, b: 0.5603821, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -1713,7 +1713,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Receiver: {fileID: 1589885225}
   tunaIds:
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
   - 17
+  - 18
+  - 19
   updateRate: 100
   s:
     m_Name: 
