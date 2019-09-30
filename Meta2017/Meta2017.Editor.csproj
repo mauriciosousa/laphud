@@ -11,14 +11,17 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.4.20f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -469,9 +472,6 @@
     <None Include="Assets\MysqlConnector\MySql.Web.xml" />
     <None Include="Assets\Recordings\Recording20190925-141830.txt" />
     <None Include="Assets\Recordings\Recording20190925-142057.txt" />
-    <None Include="Assets\Results\CalibrationPose-20190926-134222.txt" />
-    <None Include="Assets\Results\CalibrationPose-20190926-134433.txt" />
-    <None Include="Assets\Results\CalibrationPose-20190926-140400.txt" />
     <None Include="Assets\WebcamDisplay.shader" />
     <None Include="Assets\config.txt" />
     <None Include="Assets\extOSC\versions.txt" />
