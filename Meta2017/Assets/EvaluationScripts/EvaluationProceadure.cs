@@ -38,6 +38,8 @@ public enum TaskType
 
 public class EvaluationProceadure : MonoBehaviour {
 
+    public StartStopVideo INFORM_BONSAI;
+
     public HUDMessage displayMessage;
     public WebCamQueue _webcamQueue;
 
@@ -118,6 +120,10 @@ public class EvaluationProceadure : MonoBehaviour {
 
     private void _startTask()
     {
+
+        INFORM_BONSAI.start = 1;
+
+
         if (duringTask) return;
 
         if (taskCounter == 0)
@@ -150,6 +156,9 @@ public class EvaluationProceadure : MonoBehaviour {
 
         _canLogTunas = false;
         _logTunas.flush();
+
+
+        INFORM_BONSAI.start = 0;
     }
 
     void Update()
@@ -159,7 +168,7 @@ public class EvaluationProceadure : MonoBehaviour {
         if (sessionRunning)
         {
             ellapsed = DateTime.Now - sessionStartTime;
-            ellapsedDisplay = (new TimeSpan(0, SessionTimeMinutes, 0) - ellapsed).ToString("c").Split('.')[0];
+            ellapsedDisplay = " ";// (new TimeSpan(0, SessionTimeMinutes, 0) - ellapsed).ToString("c").Split('.')[0];
 
 
             if (_canLogTunas)

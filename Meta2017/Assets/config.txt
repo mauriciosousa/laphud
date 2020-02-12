@@ -1,7 +1,7 @@
 sessionTimeMinutes=1
 
-condition=BL
-//condition=HUD
+//condition=BL
+condition=HUD
 
 task=Needle_Thread
 //task=Simple_Suture

@@ -1,0 +1,8 @@
+<root>
+  <message info="Transmitter: 127.0.0.1:8008" type="Transmitted">
+    <packet>L3RyYWNraW5nAAAALGkAAAAAAAA=</packet>
+  </message>
+  <message info="Transmitter: 127.0.0.1:8008" type="Transmitted">
+    <packet>L3RyYWNraW5nAAAALGkAAAAAAAE=</packet>
+  </message>
+</root>
